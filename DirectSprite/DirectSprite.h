@@ -1,13 +1,14 @@
 /*
 *     COPYRIGHT NOTICE
-*     Copyright(c) 2017, Alopex/Helium
+*     Copyright(c) 2017, Team Shanghai Dream Equinox 
 *     All rights reserved.
 *
 * @file		DirectSprite.h
 * @brief	This File is DirectSprite DLL Project Header.
 * @author	Alopex/Helium
-* @version	v1.00a
-* @date		2017-11-28
+* @version	v1.10a
+* @date		2017-11-28	v1.00a	alopex	Create This Project
+* @date		2017-12-8	v1.10a	alopex	Code Do Not Rely On MSVCR Library
 */
 #pragma once
 
