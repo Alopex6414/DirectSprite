@@ -6,9 +6,11 @@
 * @file		DirectSprite.h
 * @brief	This File is DirectSprite DLL Project Header.
 * @author	Alopex/Helium
-* @version	v1.10a
-* @date		2017-11-28	v1.00a	alopex	Create This Project
-* @date		2017-12-8	v1.10a	alopex	Code Do Not Rely On MSVCR Library
+* @version	v1.21a
+* @date		2017-11-28	v1.00a	alopex	Create This Project.
+* @date		2017-12-8	v1.10a	alopex	Code Do Not Rely On MSVCR Library.
+* @date		2018-1-10	v1.20a	alopex	Code Add dxerr & d3dcompiler Library and Modify Verify.
+* @date		2018-1-10	v1.21a	alopex	Add Thread Safe File & Variable(DirectThreadSafe).
 */
 #pragma once
 
@@ -66,6 +68,8 @@ protected:
 	LPD3DXSPRITE m_pSprite;					//The Direct3D 9 Sprite
 
 private:
+	CRITICAL_SECTION m_cs;					//Thread Safe(CriticalSection)
+	bool m_bThreadSafe;						//Thread Safe Status
 
 public:
 	DirectSprite();				//DirectSprite Constructor Function

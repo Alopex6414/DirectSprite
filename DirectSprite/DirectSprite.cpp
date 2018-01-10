@@ -6,12 +6,15 @@
 * @file		DirectSprite.cpp
 * @brief	This File is DirectSprite DLL Project Header.
 * @author	Alopex/Helium
-* @version	v1.10a
-* @date		2017-11-28	v1.00a	alopex	Create This Project
-* @date		2017-12-8	v1.10a	alopex	Code Do Not Rely On MSVCR Library
+* @version	v1.21a
+* @date		2017-11-28	v1.00a	alopex	Create This Project.
+* @date		2017-12-8	v1.10a	alopex	Code Do Not Rely On MSVCR Library.
+* @date		2018-1-10	v1.20a	alopex	Code Add dxerr & d3dcompiler Library and Modify Verify.
+* @date		2018-1-10	v1.21a	alopex	Add Thread Safe File & Variable(DirectThreadSafe).
 */
 #include "DirectCommon.h"
 #include "DirectSprite.h"
+#include "DirectThreadSafe.h"
 
 //D3DXSprite精灵(一般用于2D场景渲染)
 
@@ -24,6 +27,9 @@
 //------------------------------------------------------------------
 DirectSprite::DirectSprite()
 {
+	m_bThreadSafe = true;									//线程安全
+	if (m_bThreadSafe) InitializeCriticalSection(&m_cs);	//初始化临界区
+
 	m_pD3D9Device = NULL;		//IDirect3DDevice9接口指针初始化(NULL)
 	m_pSpriteTexture = NULL;	//ID3DXSprite表面纹理接口指针初始化(NULL)
 	m_pSprite = NULL;			//ID3DXSprite点精灵接口指针初始化(NULL)
@@ -40,6 +46,8 @@ DirectSprite::~DirectSprite()
 {
 	SAFE_RELEASE(m_pSpriteTexture);	//释放m_pSpriteTexture
 	SAFE_RELEASE(m_pSprite);		//释放m_pSprite
+
+	if (m_bThreadSafe) DeleteCriticalSection(&m_cs);	//删除临界区
 }
 
 //------------------------------------------------------------------
@@ -51,6 +59,9 @@ DirectSprite::~DirectSprite()
 //------------------------------------------------------------------
 DirectSprite::DirectSprite(LPDIRECT3DDEVICE9 pD3D9Device)
 {
+	m_bThreadSafe = true;									//线程安全
+	if (m_bThreadSafe) InitializeCriticalSection(&m_cs);	//初始化临界区
+
 	m_pD3D9Device = pD3D9Device;//IDirect3DDevice9接口指针初始化(传入D3D9设备指针)
 	m_pSpriteTexture = NULL;	//ID3DXSprite表面纹理接口指针初始化(NULL)
 	m_pSprite = NULL;			//ID3DXSprite点精灵接口指针初始化(NULL)
@@ -65,6 +76,8 @@ DirectSprite::DirectSprite(LPDIRECT3DDEVICE9 pD3D9Device)
 //------------------------------------------------------------------
 HRESULT WINAPI DirectSprite::DirectSpriteInit(LPCWSTR lpszStr)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
+
 	VERIFY(D3DXCreateTextureFromFile(m_pD3D9Device, lpszStr, &m_pSpriteTexture));//D3DXSprite精灵加载纹理
 	VERIFY(D3DXCreateSprite(m_pD3D9Device, &m_pSprite));//D3DXSprite精灵创建
 
@@ -80,6 +93,8 @@ HRESULT WINAPI DirectSprite::DirectSpriteInit(LPCWSTR lpszStr)
 //------------------------------------------------------------------
 HRESULT WINAPI DirectSprite::DirectSpriteReload(LPCWSTR lpszStr)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
+
 	SAFE_RELEASE(m_pSpriteTexture);	//释放m_pSpriteTexture
 	SAFE_RELEASE(m_pSprite);		//释放m_pSprite
 	VERIFY(D3DXCreateTextureFromFile(m_pD3D9Device, lpszStr, &m_pSpriteTexture));//D3DXSprite精灵加载纹理
@@ -97,6 +112,7 @@ HRESULT WINAPI DirectSprite::DirectSpriteReload(LPCWSTR lpszStr)
 //------------------------------------------------------------------
 HRESULT WINAPI DirectSprite::DirectSpriteBegin(void)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	VERIFY(m_pSprite->Begin(D3DXSPRITE_ALPHABLEND));
 	return S_OK;
 }
@@ -110,6 +126,7 @@ HRESULT WINAPI DirectSprite::DirectSpriteBegin(void)
 //------------------------------------------------------------------
 HRESULT WINAPI DirectSprite::DirectSpriteEnd(void)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	VERIFY(m_pSprite->End());
 	return S_OK;
 }
@@ -123,6 +140,7 @@ HRESULT WINAPI DirectSprite::DirectSpriteEnd(void)
 //------------------------------------------------------------------
 void WINAPI DirectSprite::DirectSpriteGetTransform(D3DXMATRIX* pMatrix)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	m_pSprite->GetTransform(pMatrix);
 }
 
@@ -135,6 +153,7 @@ void WINAPI DirectSprite::DirectSpriteGetTransform(D3DXMATRIX* pMatrix)
 //------------------------------------------------------------------
 void WINAPI DirectSprite::DirectSpriteSetTransform(D3DXMATRIX* pMatrix)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	m_pSprite->SetTransform(pMatrix);
 }
 
@@ -147,6 +166,7 @@ void WINAPI DirectSprite::DirectSpriteSetTransform(D3DXMATRIX* pMatrix)
 //----------------------------------------------------------------------
 void WINAPI DirectSprite::DirectSpriteDraw(DirectSpriteDrawPara* sSpriteDrawPara)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	m_pSprite->Draw(m_pSpriteTexture, &(sSpriteDrawPara->SpriteRect), &(sSpriteDrawPara->SpriteCenter), &(sSpriteDrawPara->SpritePosition), sSpriteDrawPara->SpriteColor);
 }
 
@@ -162,6 +182,7 @@ void WINAPI DirectSprite::DirectSpriteDraw(DirectSpriteDrawPara* sSpriteDrawPara
 //----------------------------------------------------------------------------------------------------------------------------------
 void WINAPI DirectSprite::DirectSpriteDraw(RECT* pSpriteRect, D3DXVECTOR3* pSpriteCenter, D3DXVECTOR3* pSpritePosition, D3DCOLOR SpriteColor)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	m_pSprite->Draw(m_pSpriteTexture, pSpriteRect, pSpriteCenter, pSpritePosition, SpriteColor);
 }
 
@@ -174,6 +195,7 @@ void WINAPI DirectSprite::DirectSpriteDraw(RECT* pSpriteRect, D3DXVECTOR3* pSpri
 //---------------------------------------------------------------------------------------------------------
 void WINAPI DirectSprite::DirectSpriteDrawScale(DirectSpriteDrawPara* sSpriteDrawPara, float fScaleX, float fScaleY)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	D3DXMATRIX Matrix;
 	D3DXMATRIX MatrixNative;
 	D3DXMATRIX MatrixScale;
@@ -196,6 +218,7 @@ void WINAPI DirectSprite::DirectSpriteDrawScale(DirectSpriteDrawPara* sSpriteDra
 //-----------------------------------------------------------------------------------------------------------------
 void WINAPI DirectSprite::DirectSpriteDrawScale(DirectSpriteDrawPara* sSpriteDrawPara, DirectSpriteScale sScalePara)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	D3DXMATRIX Matrix;
 	D3DXMATRIX MatrixNative;
 	D3DXMATRIX MatrixScale;
@@ -218,6 +241,7 @@ void WINAPI DirectSprite::DirectSpriteDrawScale(DirectSpriteDrawPara* sSpriteDra
 //-----------------------------------------------------------------------------------------------------------------
 void WINAPI DirectSprite::DirectSpriteDrawRotate(DirectSpriteDrawPara* sSpriteDrawPara, float fRotateZ)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	D3DXMATRIX Matrix;
 	D3DXMATRIX MatrixNative;
 	D3DXMATRIX MatrixRotate;
@@ -240,6 +264,7 @@ void WINAPI DirectSprite::DirectSpriteDrawRotate(DirectSpriteDrawPara* sSpriteDr
 //-----------------------------------------------------------------------------------------------------------------
 void WINAPI DirectSprite::DirectSpriteDrawRotate(DirectSpriteDrawPara* sSpriteDrawPara, DirectSpriteRotate sRotatePara)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	D3DXMATRIX Matrix;
 	D3DXMATRIX MatrixNative;
 	D3DXMATRIX MatrixRotate;
@@ -262,6 +287,7 @@ void WINAPI DirectSprite::DirectSpriteDrawRotate(DirectSpriteDrawPara* sSpriteDr
 //---------------------------------------------------------------------------------------------------------------------
 void WINAPI DirectSprite::DirectSpriteDrawTranslate(DirectSpriteDrawPara* sSpriteDrawPara, float fTranslateX, float fTranslateY)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	D3DXMATRIX Matrix;
 	D3DXMATRIX MatrixNative;
 	D3DXMATRIX MatrixTranslate;
@@ -286,6 +312,7 @@ void WINAPI DirectSprite::DirectSpriteDrawTranslate(DirectSpriteDrawPara* sSprit
 //-------------------------------------------------------------------------------------------------------------------------
 void WINAPI DirectSprite::DirectSpriteDrawTranslate(DirectSpriteDrawPara* sSpriteDrawPara, DirectSpriteTranslate sTranslatePara)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	D3DXMATRIX Matrix;
 	D3DXMATRIX MatrixNative;
 	D3DXMATRIX MatrixTranslate;
@@ -310,6 +337,7 @@ void WINAPI DirectSprite::DirectSpriteDrawTranslate(DirectSpriteDrawPara* sSprit
 //-------------------------------------------------------------------------------------------------------------------------
 void WINAPI DirectSprite::DirectSpriteDrawTransform(DirectSpriteDrawPara* sSpriteDrawPara, DirectSpriteTransformPara sTransformPara)
 {
+	DirectThreadSafe ThreadSafe(&m_cs, m_bThreadSafe);
 	D3DXMATRIX Matrix;
 	D3DXMATRIX MatrixNative;
 	D3DXMATRIX MatrixScale;
