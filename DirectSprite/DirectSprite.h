@@ -6,11 +6,12 @@
 * @file		DirectSprite.h
 * @brief	This File is DirectSprite DLL Project Header.
 * @author	Alopex/Helium
-* @version	v1.21a
+* @version	v1.22a
 * @date		2017-11-28	v1.00a	alopex	Create This Project.
 * @date		2017-12-8	v1.10a	alopex	Code Do Not Rely On MSVCR Library.
 * @date		2018-1-10	v1.20a	alopex	Code Add dxerr & d3dcompiler Library and Modify Verify.
 * @date		2018-1-10	v1.21a	alopex	Add Thread Safe File & Variable(DirectThreadSafe).
+* @date		2018-4-12	v1.22a	alopex	Add Macro Call Mode.
 */
 #pragma once
 
@@ -23,6 +24,8 @@
 #else
 #define DIRECTSPRITE_API __declspec(dllimport)
 #endif
+
+#define DIRECTSPRITE_CALLMODE	__stdcall
 
 //Struct Definition
 typedef struct
@@ -76,21 +79,21 @@ public:
 	virtual ~DirectSprite();	//DirectSprite Destructor Function
 
 	DirectSprite(LPDIRECT3DDEVICE9 pD3D9Device);					//DirectSprite Constructor Function(Use D3D Device)
-	virtual HRESULT WINAPI DirectSpriteInit(LPCWSTR lpszStr);		//DirectSprite Initialize
-	virtual HRESULT WINAPI DirectSpriteReload(LPCWSTR lpszStr);		//DirectSprite Reload(Texture Changed)
-	HRESULT WINAPI DirectSpriteBegin(void);							//DirectSprite Begin Draw
-	HRESULT WINAPI DirectSpriteEnd(void);							//DirectSprite End Draw
-	void WINAPI DirectSpriteGetTransform(D3DXMATRIX* pMatrix);		//DirectSprite Get Transform
-	void WINAPI DirectSpriteSetTransform(D3DXMATRIX* pMatrix);		//DirectSprite Set Transform
-	void WINAPI DirectSpriteDraw(DirectSpriteDrawPara* sSpriteDrawPara);																//DirectSprite Draw
-	void WINAPI DirectSpriteDraw(RECT* pSpriteRect, D3DXVECTOR3* pSpriteCenter, D3DXVECTOR3* pSpritePosition, D3DCOLOR SpriteColor);	//DirectSprite Draw
-	void WINAPI DirectSpriteDrawScale(DirectSpriteDrawPara* sSpriteDrawPara, float fScaleX = 1.0f, float fScaleY = 1.0f);				//DirectSprite Draw Scale
-	void WINAPI DirectSpriteDrawScale(DirectSpriteDrawPara* sSpriteDrawPara, DirectSpriteScale sScalePara); 							//DirectSprite Draw Scale
-	void WINAPI DirectSpriteDrawRotate(DirectSpriteDrawPara* sSpriteDrawPara, float fRotateZ = 0.0f);									//DirectSprite Draw Rotate
-	void WINAPI DirectSpriteDrawRotate(DirectSpriteDrawPara* sSpriteDrawPara, DirectSpriteRotate sRotatePara);							//DirectSprite Draw Rotate
-	void WINAPI DirectSpriteDrawTranslate(DirectSpriteDrawPara* sSpriteDrawPara, float fTranslateX = 0.0f, float fTranslateY = 0.0f);	//DirectSprite Draw Translate
-	void WINAPI DirectSpriteDrawTranslate(DirectSpriteDrawPara* sSpriteDrawPara, DirectSpriteTranslate sTranslatePara);					//DirectSprite Draw Translate
-	void WINAPI DirectSpriteDrawTransform(DirectSpriteDrawPara* sSpriteDrawPara, DirectSpriteTransformPara sTransformPara);				//DirectSprite Draw Transform
+	virtual HRESULT DIRECTSPRITE_CALLMODE DirectSpriteInit(LPCWSTR lpszStr);		//DirectSprite Initialize
+	virtual HRESULT DIRECTSPRITE_CALLMODE DirectSpriteReload(LPCWSTR lpszStr);		//DirectSprite Reload(Texture Changed)
+	HRESULT DIRECTSPRITE_CALLMODE DirectSpriteBegin(void);							//DirectSprite Begin Draw
+	HRESULT DIRECTSPRITE_CALLMODE DirectSpriteEnd(void);							//DirectSprite End Draw
+	void DIRECTSPRITE_CALLMODE DirectSpriteGetTransform(D3DXMATRIX* pMatrix);		//DirectSprite Get Transform
+	void DIRECTSPRITE_CALLMODE DirectSpriteSetTransform(D3DXMATRIX* pMatrix);		//DirectSprite Set Transform
+	void DIRECTSPRITE_CALLMODE DirectSpriteDraw(DirectSpriteDrawPara* sSpriteDrawPara);																//DirectSprite Draw
+	void DIRECTSPRITE_CALLMODE DirectSpriteDraw(RECT* pSpriteRect, D3DXVECTOR3* pSpriteCenter, D3DXVECTOR3* pSpritePosition, D3DCOLOR SpriteColor);	//DirectSprite Draw
+	void DIRECTSPRITE_CALLMODE DirectSpriteDrawScale(DirectSpriteDrawPara* sSpriteDrawPara, float fScaleX = 1.0f, float fScaleY = 1.0f);				//DirectSprite Draw Scale
+	void DIRECTSPRITE_CALLMODE DirectSpriteDrawScale(DirectSpriteDrawPara* sSpriteDrawPara, DirectSpriteScale sScalePara); 							//DirectSprite Draw Scale
+	void DIRECTSPRITE_CALLMODE DirectSpriteDrawRotate(DirectSpriteDrawPara* sSpriteDrawPara, float fRotateZ = 0.0f);									//DirectSprite Draw Rotate
+	void DIRECTSPRITE_CALLMODE DirectSpriteDrawRotate(DirectSpriteDrawPara* sSpriteDrawPara, DirectSpriteRotate sRotatePara);							//DirectSprite Draw Rotate
+	void DIRECTSPRITE_CALLMODE DirectSpriteDrawTranslate(DirectSpriteDrawPara* sSpriteDrawPara, float fTranslateX = 0.0f, float fTranslateY = 0.0f);	//DirectSprite Draw Translate
+	void DIRECTSPRITE_CALLMODE DirectSpriteDrawTranslate(DirectSpriteDrawPara* sSpriteDrawPara, DirectSpriteTranslate sTranslatePara);					//DirectSprite Draw Translate
+	void DIRECTSPRITE_CALLMODE DirectSpriteDrawTransform(DirectSpriteDrawPara* sSpriteDrawPara, DirectSpriteTransformPara sTransformPara);				//DirectSprite Draw Transform
 };
 
 #endif
