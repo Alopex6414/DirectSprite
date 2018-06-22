@@ -1,17 +1,18 @@
 /*
 *     COPYRIGHT NOTICE
-*     Copyright(c) 2017, Team Shanghai Dream Equinox 
+*     Copyright(c) 2017~2018, Team Shanghai Dream Equinox 
 *     All rights reserved.
 *
 * @file		DirectSprite.h
 * @brief	This File is DirectSprite DLL Project Header.
 * @author	Alopex/Helium
-* @version	v1.22a
+* @version	v1.23a
 * @date		2017-11-28	v1.00a	alopex	Create This Project.
 * @date		2017-12-8	v1.10a	alopex	Code Do Not Rely On MSVCR Library.
-* @date		2018-1-10	v1.20a	alopex	Code Add dxerr & d3dcompiler Library and Modify Verify.
-* @date		2018-1-10	v1.21a	alopex	Add Thread Safe File & Variable(DirectThreadSafe).
-* @date		2018-4-12	v1.22a	alopex	Add Macro Call Mode.
+* @date		2018-01-10	v1.20a	alopex	Code Add dxerr & d3dcompiler Library and Modify Verify.
+* @date		2018-01-10	v1.21a	alopex	Add Thread Safe File & Variable(DirectThreadSafe).
+* @date		2018-04-12	v1.22a	alopex	Add Macro Call Mode.
+* @date		2018-06-22	v1.23a	alopex	Add Version Infomation.
 */
 #pragma once
 
