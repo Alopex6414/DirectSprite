@@ -88,9 +88,13 @@
     <ClInclude Include="DirectCommon.h" />
     <ClInclude Include="DirectSprite.h" />
     <ClInclude Include="DirectThreadSafe.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectSprite.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DirectSprite.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
