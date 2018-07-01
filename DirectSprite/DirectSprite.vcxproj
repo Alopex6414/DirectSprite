@@ -92,6 +92,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DirectSprite.cpp" />
+    <ClCompile Include="DirectThreadSafe.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DirectSprite.rc" />

@@ -6,7 +6,7 @@
 * @file		DirectSprite.cpp
 * @brief	This File is DirectSprite DLL Project Header.
 * @author	Alopex/Helium
-* @version	v1.24a
+* @version	v1.25a
 * @date		2017-11-28	v1.00a	alopex	Create This Project.
 * @date		2017-12-8	v1.10a	alopex	Code Do Not Rely On MSVCR Library.
 * @date		2018-01-10	v1.20a	alopex	Code Add dxerr & d3dcompiler Library and Modify Verify.
@@ -14,6 +14,7 @@
 * @date		2018-04-12	v1.22a	alopex	Add Macro Call Mode.
 * @date		2018-06-22	v1.23a	alopex	Add Version Infomation.
 * @date		2018-06-22	v1.24a	alopex	Add Struct Definition.
+* @date		2018-07-1	v1.25a	alopex	Modify Thread Safe Class.
 */
 #include "DirectCommon.h"
 #include "DirectSprite.h"
